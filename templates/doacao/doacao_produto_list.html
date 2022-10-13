@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-12 m-auto text-left">
+    <h3>Doações do Produto</h3>
+    <h4 class="ml-2 text-secondary" style="font-size: 1rem;">
+        <em class="fas fa-angle-double-right mr-1"></em>
+        {{ grupoProdutoDescricao }}
+    </h4>
+</div>
+
+<div class="col-12 m-auto pt-2 text-right">
+    <a href="{% url 'dashboard:view' %}" target="_self"
+        class="btn btn-secondary" style="width: 100px" role="button">Voltar</a>
+</div>
+
+<div class="col-12 m-auto pt-2">
+    <table class="table table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Agendado</th>
+                <th scope="col">Qtde</th>
+                <th scope="col">Doador</th>
+                <th scope="col">STA</th>
+                <th scope="col" class="text-center" style="width: 30px">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dbs in db %}
+                <tr {% if dbs.status == "PER" %}class="text-danger">{% endif %}>
+                    <td class="align-middle">{{ dbs.dataAgendamento|date:"d/m" }}</td>
+                    <td class="align-middle pl-3">{{ dbs.quantidade }}</td>
+                    <td class="align-middle">{{ dbs.doador.username }}</td>
+                    <td class="align-middle">{{ dbs.status }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'doacao:view' dbs.id %}" class="pr-1" target="_self"
+                            role="button" title="Abrir doação de {{ dbs.doador.username }}">
+                            <em class="fas fa-eye"></em>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <caption class="text-center">Coluna STA indica status da doação</caption>
+    </table>
+    {% if is_paginated %}
+    {% include "pagination.html" with page=page_obj %}
+    {% endif %}
+</div>    
+
+{% endblock %}

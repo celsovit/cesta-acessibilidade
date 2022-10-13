@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-12 m-auto text-left">
+  <h3>Doação de Alimentos</h3>
+</div>
+
+<div class="col-12 m-auto pt-4">
+  <table class="table table-sm">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">Descrição</th>
+              <th scope="col" style="width: 150px" class="text-center">% Atingido</th>
+              <th scope="col" style="width: 112px" class="text-center">Ação</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for dbs in db %}
+              <tr>
+                  <td class="align-middle">{{ dbs.descricao }}</td>
+                  <td class="align-middle">
+                    <div class="progress">
+                        {% if dbs.percentual < 100 %}
+                            <span class="sr-only" id="progresso_{{ forloop.counter }}" 
+                                aria-label="{{ dbs.percentual }}% de {{ dbs.descricao }}"></span>
+                            <div class="progress-bar bg-warning" style="width: {{ dbs.percentual }}%"></div>
+                        {% else %}
+                            <span class="sr-only" id="meta_ok_{{ forloop.counter }}" 
+                                aria-label="100% de {{ dbs.descricao }}"></span>
+                            <div class="progress-bar bg-info" style="width: 100%"></div>
+                        {% endif %}
+                    </div>                    
+                  </td>
+                  <td>
+                      <a href="{% url 'doacao:doar' dbs.id %}" class="btn btn-sm btn-secondary" style="width: 100px" 
+                        title="doar {{ dbs.descricao }}" role="button">Doar</a>
+                  </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  {% if is_paginated %}
+  {% include "pagination.html" with page=page_obj %}
+  {% endif %}
+</div>    
+
+{% endblock %}
